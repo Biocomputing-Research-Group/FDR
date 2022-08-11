@@ -97,13 +97,11 @@ https://github.com/guo-xuan/Sipros-Ensemble/tree/master/configs
 
 ```
 python fdr_main.py [your config file]
-
 ```
 For example,
 
 ```
 python fdr_main.py fconfig.cfg
-
 ```
 
 ## Feedback
