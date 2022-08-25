@@ -114,4 +114,7 @@ python fdr_main.py fconfig.cfg
 If you have any feedback, please reach out to us at Xuan.Guo@unt.edu.
 
 
+## License
+
+[GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
