@@ -80,7 +80,7 @@ pep_fdr=0.01
 protein_fdr=0.01
 # The path to comet search result folder
 comet_txt_dir=./toy_example/hgut_txt/
-# Mehod: "C" for Comet (e-value), "CP" for Comet + Percolator(score)
+# Mehod: "C" for Comet (e-value), "CP" for Comet + Percolator (Percolator score)
 method=C
 # Path to the specie dictionay
 sp_dic=./toy_example/humanGutMarine_ProToOTU.tsv
