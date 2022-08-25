@@ -1,7 +1,7 @@
 
 # FineFDR
 
-A Fine-grained Taxonomy-specific FDR assessment tool to control the FDR separately for peptides in different taxonomic ranks. The critical innovation of FineFDR is that a novel data integration model is developed to assess FDR accurately using meta-information from reference databases or sample-specific sequencing data, or from both data sources. The details are available in [paper].
+A fast and accurate Fine-grained Taxonomy-specific FDR assessment tool to control the FDR separately for peptides in different taxonomic ranks. The critical innovation of FineFDR is that a novel data integration model is developed to assess FDR accurately using meta-information from reference databases or sample-specific sequencing data, or from both data sources. The details are available in [paper].
 
 
 ## Setup
