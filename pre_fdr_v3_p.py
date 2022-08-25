@@ -232,6 +232,55 @@ def percolator_to_comet(target_file, deocy_file, combined_txt, postfix, path_to_
             record = c_PSMId_record_dic[PSMId]
             data = record.replace("\n", "") + "\t" + p_PSMId_score_dic[PSMId] + "\n"
             f3.write(data)
+    return path_to_converted_output + 'converted' + postfix
+
+
+def pick_top_one_percolator(input_txt):
+    cleaned_result = "./temp/cleaned.txt"
+    with open(cleaned_result, 'w') as f:
+        psm_out_list = ['SpecId',  # 0
+                        'scan',  # 1
+                        'num',  # 2
+                        'charge',  # 3
+                        'exp_neutral_mass',  # 4
+                        'calc_neutral_mass',  # 5
+                        'e-value',  # 6
+                        'xcorr',  # 7
+                        'delta_cn',  # 8
+                        'sp_score',  # 9
+                        'ions_matched',  # 10
+                        'ions_total',  # 11
+                        'plain_peptide',  # 12
+                        'modified_peptide',  # 13
+                        'prev_aa',  # 14
+                        'next_aa',  # 15
+                        'protein',  # 16
+                        'protein_count',  # 17
+                        'modifications',  # 18
+                        'retention_time_sec',  # 19
+                        'sp_rank',  # 20
+                        'p_score',  # 21
+                        'posterior_error_prob']  # 22
+        f.write('\t'.join(psm_out_list) + '\n')
+        top_dic = {}
+        score_loc = 21
+        with open(input_txt, 'r', encoding='utf-8') as txt:
+            next(txt)
+            for line in txt:
+                data = line.split("\t")
+                SpecId = data[0][:-2]
+                score = data[score_loc]
+                if SpecId not in top_dic.keys():
+                    top_dic[SpecId] = line
+                else:
+                    in_dic_line = top_dic[SpecId]
+                    in_dic_data = in_dic_line.split("\t")
+                    in_dic_score = in_dic_data[score_loc]
+                    if in_dic_score < score:
+                        top_dic[SpecId] = line
+        for value in top_dic.values():
+            f.write(value)
+    return cleaned_result
 
 '''
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ from sipros_peptides_assembling_mod2 import peptides_assembling, peptides_assemb
 import multiprocessing
 import sipros_post_module
 from functools import partial
-from pre_fdr_v3_p import percolator_to_comet, divide_species_auto_p, divide_species_dic_p
+from pre_fdr_v3_p import percolator_to_comet, divide_species_auto_p, divide_species_dic_p, pick_top_one_percolator
 from pre_fdr_v3_c import combine_txt_files, clean_comet, divide_species_auto_c, divide_species_dic_c
 import re
 import glob
@@ -18,7 +18,7 @@ import glob
 path_to_temp_files = './temp'
 path_to_species_pin = './temp/species_pin'
 
-## Glboal variables
+# global variables
 pep_file_ext = '.pep.txt'
 psm_file_ext = '.psm.txt'
 decoy_prefix = 'Rev_'
@@ -342,6 +342,21 @@ def read_txt(input_txt, method):
                     MassDiff, float(score) * score_measure,
                     PTM_score, IdentifyPeptide, PSM_Label, Proteins, ProteinNames, ProteinCount))
     return PSMs_ouput
+
+
+def read_crux_txt(crux_txt):
+    with open(crux_txt, 'r', encoding='utf-8') as txt_input:
+        next(txt_input)
+        for line in txt_input:
+            data = line.split("\t")
+            ProteinNames = data[14]
+            Proteins = ProteinNames.split(",")
+            updated_proteins = []
+            for pr in Proteins:
+                pr = pr.split("(")[0]
+                updated_proteins = updated_proteins + pr
+            Proteins = updated_proteins
+            ProteinNames = ','.join(Proteins)
 
 
 def fdr_control_original(rank_list, input_pin, psm_fdr, pep_fdr, output_dir):
@@ -884,6 +899,54 @@ def binary_protein_fdr_search_species_search(input_pins_dir, psm_fdr, pep_fdr, t
     return current_protein_fdr
 
 
+def pick_top_one(input_txt, method):
+    with open('./temp/top.txt', 'w') as f:
+        psm_out_list = ['SpecId',  # 0
+                        'scan',  # 1
+                        'num',  # 2
+                        'charge',  # 3
+                        'exp_neutral_mass',  # 4
+                        'calc_neutral_mass',  # 5
+                        'e-value',  # 6
+                        'xcorr',  # 7
+                        'delta_cn',  # 8
+                        'sp_score',  # 9
+                        'ions_matched',  # 10
+                        'ions_total',  # 11
+                        'plain_peptide',  # 12
+                        'modified_peptide',  # 13
+                        'prev_aa',  # 14
+                        'next_aa',  # 15
+                        'protein',  # 16
+                        'protein_count',  # 17
+                        'modifications',  # 18
+                        'retention_time_sec',  # 19
+                        'sp_rank',  # 20
+                        't_score']  # 21
+        f.write('\t'.join(psm_out_list) + '\n')
+        top_dic = {}
+        if method == "CP":
+            score_loc = 22
+        else:
+            score_loc = 21
+        with open(input_txt, 'r', encoding='utf-8') as txt:
+            next(txt)
+            for line in txt:
+                data = line.split("\t")
+                SpecId = data[0]
+                score = data[score_loc]
+                if SpecId not in top_dic.keys():
+                    top_dic[SpecId] = line
+                else:
+                    in_dic_line = top_dic[SpecId]
+                    in_dic_data = in_dic_line.split("\t")
+                    in_dic_score = in_dic_data[score_loc]
+                    if in_dic_score < score:
+                        top_dic[SpecId] = line
+        for value in top_dic.values():
+            f.write(value)
+
+
 def main(argv):
     print('Configuration File:', argv[1])
     config_dic = {}
@@ -931,9 +994,10 @@ def main(argv):
     if method == "CP":
         txt_input = combine_txt_files(input_txt_dir, postfix, combined_txt_dir)
         # combine_pin_files(input_pin_dir, ".pin", combined_txt_dir)
-        percolator_to_comet(target_file, deocy_file, txt_input , postfix, path_to_converted_output)
-        # divide_species_auto_p("./converted.txt", path_to_species_pin) # U1 Mock
-        divide_species_dic_p("./temp/converted.txt", path_to_species_dic, path_to_species_pin) # Marine, soil, hgut
+        path_to_converted_output = percolator_to_comet(target_file, deocy_file, txt_input, postfix, path_to_converted_output)
+        path_to_cleaned_percolator_output = pick_top_one_percolator(path_to_converted_output)
+        # divide_species_auto_p(path_to_cleaned_percolator_output, path_to_species_pin) # U1 Mock
+        divide_species_dic_p(path_to_cleaned_percolator_output, path_to_species_dic, path_to_species_pin)  # Marine, soil, hgut
         binary_protein_fdr_search_species_search(input_pins_dir, psm_fdr, psm_fdr, target_protein_fdr, max_run,
                                                  output_dir_or, method)
     return
