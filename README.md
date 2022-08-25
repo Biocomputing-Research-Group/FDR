@@ -1,7 +1,7 @@
 
 # FineFDR
 
-A fast and accurate Fine-grained Taxonomy-specific FDR assessment tool to control the FDR separately for peptides in different taxonomic ranks. 
+A fast and accurate fine-grained taxonomy-specific FDR assessment tool to control the FDR separately for peptides in different taxonomic ranks. 
 The details are available in [paper].
 
 
