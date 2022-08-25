@@ -22,6 +22,8 @@ A Fine-grained Taxonomy-specific FDR assessment tool to control the FDR separate
 
 Download the human gut microbial complex via the PRIDE repository PXD006118. We will call the toy example HG in short.
 
+Or, https://github.com/Biocomputing-Research-Group/FDR/blob/main/toy_example.7z. And, extract files.
+
 ### Database Search
 
 Search the seleted database using Comet release 2022.01 rev.0 (We will provide support for more search engines in the future releases). The sample results for HG in .pin and .txt format are provided.
