@@ -306,7 +306,7 @@ def read_txt(input_txt, method):
         score_loc = 21  # P-score
         score_measure = 1
     if method == "C":
-        score_loc = 6  # Xcorr
+        score_loc = 6  # e-value
         score_measure = -1
     with open(input_txt, 'r', encoding='utf-8') as txt_input:
         next(txt_input)
