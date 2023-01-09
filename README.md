@@ -2,7 +2,7 @@
 # FineFDR
 
 A fast and accurate fine-grained taxonomy-specific FDR assessment tool to control the FDR separately for peptides in different taxonomic ranks. 
-The details are available in [paper].
+The details are available in [FineFDR: Fine-grained Taxonomy-specific False Discovery Rates Control in Metaproteomics](https://www.computer.org/csdl/proceedings-article/bibm/2022/09995401/1JC1V4ZwRO0).
 
 
 ## Setup
